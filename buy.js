@@ -6,7 +6,7 @@ Object.assign(process.env, Env);
 const ethers = require("ethers");
 
 const purchaseToken = process.env.PURCHASE_TOKEN;
-const purchaseAmount = Ethers.utils.parseUnits(
+const purchaseAmount = ethers.utils.parseUnits(
   process.env.PURCHASE_AMOUNT,
   "ether"
 ); // buy in BNB
@@ -25,7 +25,6 @@ const router = new ethers.Contract(
   pcs,
   [
     "function getAmountsOut(uint amountIn, address[] memory path) public view returns (uint[] memory amounts)",
-    "function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable returns (uint[] memory amounts)",
     "function swapExactETHForTokensSupportingFeeOnTransferTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable",
   ],
   account
@@ -45,9 +44,7 @@ async function buy() {
     tokenOut: ${amountOutMin.toString()} ${purchaseToken} 
   `);
 
-  // For "taxed" coins - swap out next line
-  //const txt = await router.swapExactETHForTokensSupportingFeeOnTransferTokens(
-  const tx = await router.swapExactETHForTokens(
+  const tx = await router.swapExactETHForTokensSupportingFeeOnTransferTokens(
     amountOutMin,
     [wbnb, purchaseToken],
     process.env.RECIPIENT,
@@ -58,7 +55,7 @@ async function buy() {
       gasPrice: ethers.utils.parseUnits("6", "gwei"),
     }
   );
-
+  console.log("Waiting for Reciept...");
   const receipt = await tx.wait();
   console.log("Transaction receipt");
   console.log(receipt);
