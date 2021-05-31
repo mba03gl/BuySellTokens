@@ -3,7 +3,7 @@
 # Initial Setup
 
 1. Clone repository
-1. install node js ~v12.4.1
+1. install node js ~v14.17.0
 3. Run npm i
 4. Edit env.js
 
